@@ -8,4 +8,5 @@ A serial input port for MIDI data implemented with programmable logic for ECE 35
 
 ## Resources
 [Project Homepage](http://ece353.ecs.umass.edu/2017lab4/2017lab4.html)
+
 [Verilog HDL Coding Standard - Freescale Semiconductor](https://people.ece.cornell.edu/land/courses/ece5760/Verilog/FreescaleVerilog.pdf)
