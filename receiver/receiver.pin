@@ -65,32 +65,32 @@ CHIP  "receiver"  ASSIGNED TO AN: EPM7064SLC44-10
 
 Pin Name/Usage               : Location  : Dir.   : I/O Standard      : Voltage : I/O Bank  : User Assignment
 -------------------------------------------------------------------------------------------------------------
-GND+                         : 1         :        :                   :         :           :                
+RESET                        : 1         : input  : TTL               :         :           : Y              
 GND+                         : 2         :        :                   :         :           :                
 VCC                          : 3         : power  :                   :         :           :                
-LED[6]                       : 4         : output : TTL               :         :           : N              
-LED[5]                       : 5         : output : TTL               :         :           : N              
-LED[4]                       : 6         : output : TTL               :         :           : N              
+RESERVED                     : 4         :        :                   :         :           :                
+RESERVED                     : 5         :        :                   :         :           :                
+RESERVED                     : 6         :        :                   :         :           :                
 TDI                          : 7         : input  : TTL               :         :           : N              
-LED[3]                       : 8         : output : TTL               :         :           : N              
-LED[2]                       : 9         : output : TTL               :         :           : N              
+RESERVED                     : 8         :        :                   :         :           :                
+RESERVED                     : 9         :        :                   :         :           :                
 GND                          : 10        : gnd    :                   :         :           :                
-LED[1]                       : 11        : output : TTL               :         :           : N              
-LED[0]                       : 12        : output : TTL               :         :           : N              
+RESERVED                     : 11        :        :                   :         :           :                
+LED[7]                       : 12        : output : TTL               :         :           : Y              
 TMS                          : 13        : input  : TTL               :         :           : N              
-DATA                         : 14        : input  : TTL               :         :           : N              
+LED[6]                       : 14        : output : TTL               :         :           : Y              
 VCC                          : 15        : power  :                   :         :           :                
-RESERVED                     : 16        :        :                   :         :           :                
-RESERVED                     : 17        :        :                   :         :           :                
-RESERVED                     : 18        :        :                   :         :           :                
-RESERVED                     : 19        :        :                   :         :           :                
-RESERVED                     : 20        :        :                   :         :           :                
-LED[7]                       : 21        : output : TTL               :         :           : N              
+LED[5]                       : 16        : output : TTL               :         :           : Y              
+LED[4]                       : 17        : output : TTL               :         :           : Y              
+LED[3]                       : 18        : output : TTL               :         :           : Y              
+LED[2]                       : 19        : output : TTL               :         :           : Y              
+LED[1]                       : 20        : output : TTL               :         :           : Y              
+LED[0]                       : 21        : output : TTL               :         :           : Y              
 GND                          : 22        : gnd    :                   :         :           :                
 VCC                          : 23        : power  :                   :         :           :                
 RESERVED                     : 24        :        :                   :         :           :                
 RESERVED                     : 25        :        :                   :         :           :                
-RESERVED                     : 26        :        :                   :         :           :                
+DATA                         : 26        : input  : TTL               :         :           : Y              
 RESERVED                     : 27        :        :                   :         :           :                
 RESERVED                     : 28        :        :                   :         :           :                
 RESERVED                     : 29        :        :                   :         :           :                
@@ -104,8 +104,8 @@ RESERVED                     : 36        :        :                   :         
 RESERVED                     : 37        :        :                   :         :           :                
 TDO                          : 38        : output : TTL               :         :           : N              
 RESERVED                     : 39        :        :                   :         :           :                
-RESET                        : 40        : input  : TTL               :         :           : N              
-CLK                          : 41        : input  : TTL               :         :           : N              
+RESERVED                     : 40        :        :                   :         :           :                
+RESERVED                     : 41        :        :                   :         :           :                
 GND                          : 42        : gnd    :                   :         :           :                
-GND+                         : 43        :        :                   :         :           :                
+CLK                          : 43        : input  : TTL               :         :           : Y              
 GND+                         : 44        :        :                   :         :           :                

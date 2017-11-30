@@ -47,3 +47,16 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name VERILOG_FILE receiver.v
 set_global_assignment -name MISC_FILE "C:/Users/rplagasse/Desktop/receiver/receiver.dpf"
+set_global_assignment -name MAX7000_DEVICE_IO_STANDARD TTL
+set_location_assignment PIN_43 -to CLK
+set_location_assignment PIN_26 -to DATA
+set_location_assignment PIN_12 -to LED[7]
+set_location_assignment PIN_14 -to LED[6]
+set_location_assignment PIN_16 -to LED[5]
+set_location_assignment PIN_17 -to LED[4]
+set_location_assignment PIN_18 -to LED[3]
+set_location_assignment PIN_19 -to LED[2]
+set_location_assignment PIN_20 -to LED[1]
+set_location_assignment PIN_21 -to LED[0]
+set_location_assignment PIN_1 -to RESET
+set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE receiver.v

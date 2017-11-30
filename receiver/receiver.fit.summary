@@ -1,9 +1,9 @@
-Fitter Status : Successful - Mon Nov 27 21:13:34 2017
+Fitter Status : Successful - Wed Nov 29 21:17:06 2017
 Quartus II Version : 9.1 Build 222 10/21/2009 SJ Web Edition
 Revision Name : receiver
 Top-level Entity Name : receiver
 Family : MAX7000S
 Device : EPM7064SLC44-10
 Timing Models : Final
-Total macrocells : 8 / 64 ( 13 % )
+Total macrocells : 37 / 64 ( 58 % )
 Total pins : 15 / 36 ( 42 % )
