@@ -28,25 +28,15 @@ module receiver (CLK, DATA, RESET, LED);
 	msg_state ms	(OVF[2], RESET, MSG);
 	
 	assign COUNT = CLK & RECORD;
-	assign LED[7] = note[7] & MSG;
-	assign LED[6] = note[6] & MSG;
-	assign LED[5] = note[5] & MSG;
-	assign LED[4] = note[4] & MSG;
-	assign LED[3] = note[3] & MSG;
-	assign LED[2] = note[2] & MSG;
-	assign LED[1] = note[1] & MSG;
-	assign LED[0] = note[0] & MSG;
-	
-	always @(negedge DATA or posedge OVF[1])
-	begin
+	assign LED = note & { MSG, MSG, MSG, MSG, MSG, MSG, MSG, MSG };
+		
+	always @(negedge DATA or posedge OVF[1]) begin
 		if (OVF[1]) RECORD <= 1'b0;
-		else if (RECORD == 1'b0) RECORD <= 1'b1;
+		else RECORD <= 1'b1;
 	end
 	
-	always @ (posedge SAMPLE)
-	begin
-		if (BIT != 5'h0 && BIT != 5'h9 && BYTE == 2'b1)
-		begin
+	always @ (posedge SAMPLE) begin
+		if (!MSG && BIT != 5'h0 && BIT != 5'h9 && BYTE == 2'b1) begin
 			note[7] <= note[6];
 			note[6] <= note[5];
 			note[5] <= note[4];
@@ -57,7 +47,6 @@ module receiver (CLK, DATA, RESET, LED);
 			note[0] <= DATA;
 		end
 	end
-	
 endmodule
 
 /*****************
@@ -69,17 +58,18 @@ module timer (CLK, RESET, SAMPLE, OVF);
 	output reg SAMPLE, OVF;
 		
 	reg[6:0] count;
-	wire[6:0] count_next;
 	
-	assign count_next = count + 1'b1;
-	
-	always @(posedge CLK)
-	begin
-		if (!RESET) count <= 7'b0;
-		else count <= count_next;
-		
-		SAMPLE <= count == 7'b1000000;
-		OVF <= count == 7'b0;
+	always @(posedge CLK or negedge RESET) begin
+		if (!RESET) begin
+			count <= 7'b0;
+			SAMPLE <= 1'b0;
+			OVF <= 1'b0;
+		end
+		else begin
+			count <= (count + 1'b1);
+			SAMPLE <= (count == 7'b1000000);
+			OVF <= (count == 7'b1111111);
+		end
 	end
 endmodule
 
@@ -87,17 +77,24 @@ module bit_state (INC, RESET, STATE, OVF);
 	input wire INC, RESET;
 	output reg[4:0] STATE;
 	output reg OVF;
-
-	wire[6:0] state_next;
 	
 	parameter overflow = 5'h9;
 	
-	always @(posedge INC)
-	begin
-		if (STATE == overflow || !RESET) STATE <= 5'b0;
-		else STATE <= STATE + 1;
-		
-		OVF <= STATE == 5'b0; // Fix w/ a non-blocking statement
+	always @(posedge INC or negedge RESET) begin
+		if (!RESET) begin
+			STATE <= 5'b0;
+			OVF <= 0;
+		end
+		else begin
+			if (STATE == overflow) begin
+				STATE <= 0;
+				OVF <= 1;
+			end
+			else begin
+				STATE <= (STATE + 1'b1);
+				OVF <= 0;
+			end
+		end
 	end
 endmodule
 
@@ -106,18 +103,23 @@ module byte_state (INC, RESET, STATE, OVF);
 	output reg[1:0] STATE;
 	output reg OVF;
 	
-	wire [1:0] state_next;
-	
 	parameter overflow = 2'h2;
 	
-	assign state_next = STATE + 1'b1;
-	
-	always @(posedge INC)
-	begin
-		if (STATE == overflow || !RESET) STATE <= 2'b0;
-		else STATE <= state_next;
-		
-		OVF <= STATE == 2'b0;  // Fix w/ a non-blocking statement
+	always @(posedge INC) begin
+		if (!RESET) begin
+			STATE <= 2'b0;
+			OVF <= 0;
+		end
+		else begin
+			if (STATE == overflow) begin
+				STATE <= 0;
+				OVF <= 1;
+			end
+			else begin
+				STATE <= (STATE + 1'b1);
+				OVF <= 0;
+			end
+		end
 	end
 
 endmodule
