@@ -2,5 +2,8 @@
 <LOG_ROOT>
 	<PROJECT NAME="receiver">
 		<CBX_INST_ENTRY INSTANCE_NAME="|receiver|bit_state:bis|lpm_add_sub:Add0" CBX_FILE_NAME="add_sub_onh.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|receiver|byte_state:bys|lpm_add_sub:Add0" CBX_FILE_NAME="add_sub_lnh.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|receiver|msg_state:ms|lpm_add_sub:Add0" CBX_FILE_NAME="add_sub_knh.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|receiver|timer:t|lpm_add_sub:Add0" CBX_FILE_NAME="add_sub_qnh.tdf"/>
 	</PROJECT>
 </LOG_ROOT>

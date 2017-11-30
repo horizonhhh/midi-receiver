@@ -1,5 +1,5 @@
 Flow report for receiver
-Wed Nov 29 21:17:08 2017
+Thu Nov 30 14:54:51 2017
 Quartus II Version 9.1 Build 222 10/21/2009 SJ Web Edition
 
 
@@ -38,7 +38,7 @@ applicable agreement for further details.
 +-------------------------------------------------------------------+
 ; Flow Summary                                                      ;
 +-------------------------+-----------------------------------------+
-; Flow Status             ; Successful - Wed Nov 29 21:17:08 2017   ;
+; Flow Status             ; Successful - Thu Nov 30 14:54:51 2017   ;
 ; Quartus II Version      ; 9.1 Build 222 10/21/2009 SJ Web Edition ;
 ; Revision Name           ; receiver                                ;
 ; Top-level Entity Name   ; receiver                                ;
@@ -56,7 +56,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 11/29/2017 21:17:04 ;
+; Start date & time ; 11/30/2017 14:54:48 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; receiver            ;
 +-------------------+---------------------+
@@ -67,10 +67,13 @@ applicable agreement for further details.
 +------------------------------------+--------------------------------------------------+---------------+-------------+----------------+
 ; Assignment Name                    ; Value                                            ; Default Value ; Entity Name ; Section Id     ;
 +------------------------------------+--------------------------------------------------+---------------+-------------+----------------+
-; COMPILER_SIGNATURE_ID              ; 26830024385709.151200822408852                   ; --            ; --          ; --             ;
+; COMPILER_SIGNATURE_ID              ; 26830024385709.151207168705472                   ; --            ; --          ; --             ;
+; EXTRACT_VERILOG_STATE_MACHINES     ; Off                                              ; On            ; --          ; --             ;
 ; MAX_CORE_JUNCTION_TEMP             ; 85                                               ; --            ; --          ; --             ;
 ; MIN_CORE_JUNCTION_TEMP             ; 0                                                ; --            ; --          ; --             ;
 ; MISC_FILE                          ; C:/Users/rplagasse/Desktop/receiver/receiver.dpf ; --            ; --          ; --             ;
+; RTLV_GROUP_COMB_LOGIC_IN_CLOUD     ; On                                               ; Off           ; --          ; --             ;
+; SYNTH_TIMING_DRIVEN_SYNTHESIS      ; Off                                              ; --            ; --          ; --             ;
 ; USE_GENERATED_PHYSICAL_CONSTRAINTS ; Off                                              ; --            ; --          ; eda_blast_fpga ;
 +------------------------------------+--------------------------------------------------+---------------+-------------+----------------+
 
