@@ -105,7 +105,7 @@ module byte_state (INC, RESET, STATE, OVF);
 	
 	parameter overflow = 2'h2;
 	
-	always @(posedge INC) begin
+	always @(posedge INC or negedge RESET) begin
 		if (!RESET) begin
 			STATE <= 2'b0;
 			OVF <= 0;
@@ -121,12 +121,14 @@ module byte_state (INC, RESET, STATE, OVF);
 			end
 		end
 	end
-
 endmodule
 
 module msg_state (INC, RESET, STATE);
-	input INC, RESET;
-	output STATE;
-	wire INC, RESET, STATE;
-
+	input wire INC, RESET;
+	output reg STATE;
+	
+	always @(posedge INC or negedge RESET) begin
+		if (!RESET) STATE <= 1'b0;
+		else STATE <= (STATE + 1'b1);
+	end
 endmodule
