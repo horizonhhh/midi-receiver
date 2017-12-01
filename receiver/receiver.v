@@ -29,13 +29,14 @@ module receiver (CLK, DATA, RESET, LED);
 	
 	assign LED = note & { MSG, MSG, MSG, MSG, MSG, MSG, MSG, MSG };
 		
-	always @(negedge DATA or posedge EN_BYTE) begin
-		if (EN_BYTE) EN_CLK <= 1'b0;
+	always @(negedge DATA or posedge EN_BYTE or negedge RESET) begin
+		if (!RESET || EN_BYTE) EN_CLK <= 1'b0;
 		else EN_CLK <= 1'b1;
 	end
 	
-	always @(posedge SAMPLE) begin
-		if (!MSG && BIT != 4'h0 && BIT != 4'h9 && BYTE == 2'b1) begin
+	always @(posedge SAMPLE or negedge RESET) begin
+		if (!RESET) note <= 8'b0;
+		else if (SAMPLE && !MSG && BIT != 4'h0 && BIT != 4'h9 && BYTE == 2'b1) begin
 			note[7] <= note[6];
 			note[6] <= note[5];
 			note[5] <= note[4];
@@ -60,16 +61,8 @@ module timer (CLK, EN, RESET, SAMPLE, OVF);
 	reg[6:0] count;
 	
 	always @(posedge CLK or negedge RESET) begin
-		if (!RESET) begin
-			count <= 7'b0;
-			//SAMPLE <= 1'b0;
-			//OVF <= 1'b0;
-		end
-		else if (EN) begin
-			count <= (count + 1'b1);
-			//SAMPLE <= (count == 7'b1000000);
-			//OVF <= (count == 7'b1111111);
-		end
+		if (!RESET) count <= 7'b0;
+		else if (EN) count <= (count + 1'b1);
 	end
 	
 	always @(posedge count[6] or negedge RESET) begin
@@ -91,9 +84,7 @@ module bit_state (CLK, EN, RESET, STATE, OVF);
 	parameter overflow = 5'h9;
 	
 	always @(posedge CLK or negedge RESET) begin
-		if (!RESET) begin
-			STATE <= 4'b0;
-		end
+		if (!RESET) STATE <= 4'b0;
 		else if (EN) begin
 			if (STATE == overflow) STATE <= 4'b0;
 			else STATE <= (STATE + 1'b1);
