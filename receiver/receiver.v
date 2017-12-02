@@ -9,133 +9,93 @@
 **  Receiver Module  **
 ***********************/
 
-module receiver (CLK, DATA, RESET, LED);
-	input CLK, DATA, RESET;
+module receiver (CLK, DATA, RESET, LED, CLK_EN, NOTE_SAMPLE, SAMPLE, BIT, BYTE, MSG);
+	input wire CLK, DATA, RESET;
 	output wire[7:0] LED;
 	
-	wire EN_BIT, EN_BYTE, EN_MSG;
-	wire SAMPLE;
-	wire[3:0] BIT;
-	wire[1:0] BYTE;
-	wire MSG;
+	output reg CLK_EN;
+	output wire NOTE_SAMPLE;
 	
-	reg EN_CLK;
-	reg[7:0] note;
+	output wire SAMPLE;
+	output wire[3:0] BIT;
+	output wire[1:0] BYTE;
+	output wire MSG;
+	wire[7:0] NOTE;
 	
-	timer t			(CLK, EN_CLK, RESET, SAMPLE, EN_BIT);
-	bit_state bis	(CLK, EN_BIT, RESET, BIT, EN_BYTE);
-	byte_state bys	(CLK, EN_BYTE, RESET, BYTE, EN_MSG);
-	msg_state ms	(CLK, EN_MSG, RESET, MSG);
+	timer t	(CLK, CLK_EN, RESET, SAMPLE, BIT, BYTE, MSG);
+	note n	(CLK, NOTE_SAMPLE, DATA, RESET, NOTE);
 	
-	assign LED = note & { MSG, MSG, MSG, MSG, MSG, MSG, MSG, MSG };
-		
-	always @(negedge DATA or posedge EN_BYTE or negedge RESET) begin
-		if (!RESET || EN_BYTE) EN_CLK <= 1'b0;
-		else EN_CLK <= 1'b1;
+	assign DISABLE = BIT[0] & BIT[3];
+	assign NOTE_SAMPLE = SAMPLE && (BIT != 4'b0 && BIT != 4'b1001) && (BYTE == 2'b1) && !MSG;
+	assign LED = NOTE & { MSG, MSG, MSG, MSG, MSG, MSG, MSG, MSG };
+	
+	always @(negedge DATA or posedge DISABLE or negedge RESET) begin
+		if (!RESET || DISABLE) CLK_EN <= 0;
+		else CLK_EN <= 1;
 	end
 	
-	always @(posedge SAMPLE or negedge RESET) begin
-		if (!RESET) note <= 8'b0;
-		else if (SAMPLE && !MSG && BIT != 4'h0 && BIT != 4'h9 && BYTE == 2'b1) begin
-			note[7] <= note[6];
-			note[6] <= note[5];
-			note[5] <= note[4];
-			note[4] <= note[3];
-			note[3] <= note[2];
-			note[2] <= note[1];
-			note[1] <= note[0];
-			note[0] <= DATA;
-		end
-	end
 endmodule
 
 /*****************
 **  Submodules  **
 ******************/
 
-module timer (CLK, EN, RESET, SAMPLE, OVF);
+module timer (CLK, EN, RESET, SAMPLE, BIT, BYTE, MSG);
 	input wire CLK, EN, RESET;
 	output reg SAMPLE;
-	output reg OVF;
-		
-	reg[6:0] count;
+	reg[6:0] TIME;
+	output reg[3:0] BIT;
+	output reg[1:0] BYTE;
+	output reg MSG;
+	
+	parameter TIME_SAMPLE = 7'b1000000;
+	parameter OVF_TIME = 7'b1111111;
+	parameter OVF_BIT = 4'b1001;
+	parameter OVF_BYTE = 2'b10;
 	
 	always @(posedge CLK or negedge RESET) begin
-		if (!RESET) count <= 7'b0;
-		else if (EN) count <= (count + 1'b1);
-	end
-	
-	always @(posedge count[6] or negedge RESET) begin
-		if (!RESET) SAMPLE <= 0;
-		else SAMPLE <= 1;
-	end
-	
-	always @(negedge count[6] or negedge RESET) begin
-		if (!RESET) OVF <= 0;
-		else OVF <= 1;
-	end
-endmodule
-
-module bit_state (CLK, EN, RESET, STATE, OVF);
-	input wire CLK, EN, RESET;
-	output reg[3:0] STATE;
-	output reg OVF;
-	
-	parameter overflow = 5'h9;
-	
-	always @(posedge CLK or negedge RESET) begin
-		if (!RESET) STATE <= 4'b0;
+		if (!RESET) begin
+			TIME <= 7'b0;
+			BIT <= 4'b0;
+			BYTE <= 2'b0;
+			MSG <= 1'b0;
+		end
 		else if (EN) begin
-			if (STATE == overflow) STATE <= 4'b0;
-			else STATE <= (STATE + 1'b1);
+			TIME <= TIME + 1'b1;
+	
+			if (TIME == TIME_SAMPLE) SAMPLE <= 1;
+			else SAMPLE <= 0;
+			
+			if (TIME == OVF_TIME) BIT <= BIT + 1'b1;
+			
+			if (BIT == OVF_BIT) begin
+				BIT <= 4'b0;
+				BYTE <= BYTE + 1'b1;
+			end
+			
+			if (BYTE == OVF_BYTE) begin
+				BYTE <= 2'b0;
+				MSG <= MSG + 1'b1;
+			end
 		end
 	end
-	
-	always @(negedge STATE[3] or posedge STATE[0] or negedge RESET) begin
-		if (STATE[0] || !RESET) OVF <= 1'b0;
-		else OVF <= 1'b1;
-	end
 endmodule
 
-module byte_state (CLK, EN, RESET, STATE, OVF);
-	input wire CLK, EN, RESET;
-	output reg[1:0] STATE;
-	output reg OVF;
-	
-	parameter overflow = 2'h2;
+module note (CLK, SAMPLE, DATA, RESET, NOTE);
+	input wire CLK, DATA, SAMPLE, RESET;
+	output reg[7:0] NOTE;
 	
 	always @(posedge CLK or negedge RESET) begin
-		if (!RESET) STATE <= 2'b0;
-		else if (EN) begin
-			if (STATE == overflow) STATE <= 2'b0;
-			else STATE <= (STATE + 1'b1);
+		if (!RESET) NOTE <= 8'b0;
+		else if (SAMPLE) begin
+			NOTE[7] <= NOTE[6];
+			NOTE[6] <= NOTE[5];
+			NOTE[5] <= NOTE[4];
+			NOTE[4] <= NOTE[3];
+			NOTE[3] <= NOTE[2];
+			NOTE[2] <= NOTE[1];
+			NOTE[1] <= NOTE[0];
+			NOTE[0] <= DATA;
 		end
 	end
-	
-	always @(negedge STATE[1] or posedge STATE[0] or negedge RESET) begin
-		if (STATE[0] || !RESET) OVF <= 1'b0;
-		else OVF <= 1'b1;
-	end
 endmodule
-
-module msg_state (CLK, EN, RESET, STATE);
-	input wire CLK, EN, RESET;
-	output reg STATE;
-	
-	always @(posedge CLK or negedge RESET) begin
-		if (!RESET) STATE <= 1'b0;
-		else if (EN) STATE <= (STATE + 1'b1);
-	end
-endmodule
-
-
-
-
-
-
-
-
-
-
-
-
