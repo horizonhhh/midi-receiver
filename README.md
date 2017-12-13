@@ -7,11 +7,11 @@ A serial input port for MIDI data implemented with programmable logic for ECE 35
 * Ricardo Henriquez
 
 ## Files
-* description.pdf
- Project description and specifications
+* description.pdf  
+  Project description and specifications
 
-* receiver.v
- Project code written in Verilog
+* receiver.v  
+  Project code written in Verilog
 
-* test-waveform.wvf
- A waveform used to simulate the design of the system in Altera Quartus II
+* test-waveform.wvf  
+  A waveform used to simulate the design of the system in Altera Quartus II
