@@ -35,13 +35,6 @@ module receiver (CLK, DATA, RESET, LED, BIT, BYTE, MSG);
 	assign NOTE_SAMPLE = SAMPLE && (BIT != 4'b0 && BIT != 4'b1001) && (BYTE == 2'b1) && !MSG;
 	assign LED = NOTE & { MSG, MSG, MSG, MSG, MSG, MSG, MSG, MSG };
 	
-	/*
-	always @(negedge DATA or posedge DISABLE or negedge RESET) begin
-		if (!RESET || DISABLE) CLK_EN <= 0;
-		else CLK_EN <= 1;
-	end
-	*/
-	
 	always @(posedge CLK) begin
 		if (!RESET) begin
 			data <= 2'b0;
